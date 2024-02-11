@@ -1,0 +1,24 @@
+{%extends "/shared/base.html" %}
+{% block title %}mySchool{% endblock %}
+{% block head %}
+	{{ super() }}
+    <link rel="stylesheet" href="/static/css/home.css" />
+{% endblock %}
+
+{% block body %}
+	<div class="container d-flex h-75">
+	    <div class="row justify-content-center align-self-center welcome">
+	    	<h3>WELCOME</h3>
+			<div style="width:100%">
+			<form action="/schools/search" method="GET">
+			  <div class="form-group">
+			    <label for="exampleInputEmail1">Search</label>
+			    <input type="search" autocomplete="false" name="keyword" autofocus class="form-control" id="searchSchool" placeholder="Search for schools...">
+			    <small id="searchSchoolHelp" class="form-text text-muted">Available schools will be shown to members.</small>
+			  </div>
+			  <button type="submit" class="btn btn-primary">Search</button>
+			</form>
+			</div>
+	    </div>
+	</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{%extends "/shared/base.html" %}
+
+{% block title %}Schools{% endblock %}
+
+{% block head %}
+	{{ super() }}
+
+    <link rel="stylesheet" href="/static/css/home.css" />
+{% endblock %}
+
+{% block body %}
+	<div class="container h-75">	
+		<div style="width:100%; margin-top: 3em;">
+			{% if msg %}
+				<div class="alert alert-success">{{msg}}</div>
+			{% endif %}
+			<form action="/schools/search" method="GET">
+			  <div class="form-group">
+			    <div style="width: 100%">
+			    <div style="width: 90%; display: inline-block;">
+			    <input type="search" name="keyword" autofocus class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="{{keyword}}" placeholder="Search for schools...">
+			    </div>
+				<button type="submit" style="margin-left: 5px;" class="btn btn-primary">Search</button>
+			    </div>
+			  </div>
+			</form>
+		</div>
+
+		<div style="width:100%; margin-top: 3em;">
+			{% if schools %}
+				{% if search %}
+				<h4>Search Found ({{count}})</h4>
+				{% endif %}
+				{% for school in schools %}
+				<div class="card school">
+				  <img src="/static/img/sch-bg.jpg" class="card-img-top" alt="{{school[1]}}">
+				  <div class="card-body">
+				    <h5 class="card-title"><a href="/schools/{{school['id']}}">{{school['name']}}</a></h5>
+				    <p class="card-text schooldesc">{{('' if school['location'] is none else school['location']  + ', ') + school['city']}}</p>
+
+				    <p class="card-text">
+					<span class="badge badge-primary" style="margin-bottom: 5px;">
+						This is the school you will apply
+				    </span>
+					</p>
+
+				    <a href="/schools/add/{{school['id']}}" {{ 'disabled' if user_schools!=None and str(school['id']) in user_schools else '' }} class="btn btn-outline-warning {{ 'disabled' if str(school['id']) in user_schools else '' }}"><i class="bi bi-journal-plus"></i> {{ 'Added' if str(school['id']) in user_schools else 'Add' }}</a>
+
+				  </div>
+				</div>
+				{% endfor %}
+			{% else %}
+				<h4>No Schools Found!</h4>
+				<p>Please contact the administrator</p>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

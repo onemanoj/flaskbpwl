@@ -1,0 +1,153 @@
+{%extends "/shared/base.html" %}
+
+{% block title %}Profile - {{user['firstName']}} {% endblock %}
+
+{% block body %}
+<div class="profile container">
+	{% with messages = get_flashed_messages() %}
+	{% if messages %}
+	<div class="alert alert-success">
+		{% for message in messages %}
+		<span>{{ message }}</span>
+		{% endfor %}
+	</div>
+	{% endif %}
+	{% endwith %}
+	<div class="">
+
+		<div class="card-body">
+			<div class="row d-flex justify-content-between">
+				<div class="col-md-4 pt-4 card" style="height: fit-content;">
+					<div class="card-body">
+						<div class="form-group">
+							<div class="profile-pic-div m-auto">
+								<img src="/static/img/user-ss.jpg" id="photo">
+								<!-- <input type="file" id="file">
+                                    <label for="file" id="uploadBtn" style="display: none;">Choose Photo</label> -->
+								<div class="text-center mt-4">{{user['firstName'] + ' ' + user['lastName']}}</div>
+							</div>
+						</div>
+						<hr />
+						<p class="lead">
+							{{user['about']}}
+						</p>
+						<hr />
+						<p class="lead">Joined: <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+								fill="currentColor" class="bi bi-activity" viewBox="0 0 16 16">
+								<path fill-rule="evenodd"
+									d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2Z" />
+							</svg> {{ago(user['createdOn'])}}</p>
+					</div>
+				</div>
+				<div class="card col-md-7 mwrapper">
+
+					<ul class="nav nav-tabs" id="myTab" role="tablist">
+						<li class="nav-item">
+							<a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
+								aria-controls="home" aria-selected="true">Schools applied</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+								aria-controls="profile" aria-selected="false">Profile</a>
+						</li>
+					</ul>
+
+					<div class="col-md-12 ">
+						<div class="tab-content" id="myTabContent">
+							<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+								<div class="">
+									{% if schools %}
+									<!-- <h2 class="text-center mt-4" style="margin-bottom: 0.5em;">Your Schools</h2> -->
+									<div class="text-center mb-4 mt-4"><i class="text-center mt-4 bi-school"
+											style="font-size: 6em; "></i></div>
+									{% for school in schools %}
+									<div class="card school">
+										<img src="/static/img/sch-bg.jpg" class="card-img-top" alt="{{school[1]}}">
+										<div class="card-body">
+											<h5 class="card-title"><a
+													href="/schools/{{school['id']}}">{{school['name']}}</a></h5>
+											{% if school['availability'] < 1 %} <span class="badge badge-warning"
+												style="margin-bottom: 5px;">Assigned</span>
+												{% endif %}
+												<!-- <p class="card-text schooldesc">{{school['desc']}}</p> -->
+
+												<p class="card-text">City: <span
+														class="font-weight-light">{{school['city']}}</span></p>
+										</div>
+									</div>
+									{% endfor %}
+									{% else %}
+									<div class="card bwrapper">
+										<div class="card-body">
+											<h4 class="text-center mt-4">Manage Schools</h4>
+											<div class="text-center mb-4" style="margin-top: 21px !important;">
+												<!-- <i class="text-center mt-4 bi-school" style="font-size: 6em; "></i> -->
+												<svg xmlns="http://www.w3.org/2000/svg" width="6em" height="6em"
+													fill="currentColor" class="bi bi-activity" viewBox="0 0 16 16">
+													<path fill-rule="evenodd"
+														d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2Z" />
+												</svg>
+											</div>
+											<p class="text-center mb-4">You have not applied to any schools!</p>
+										</div>
+									</div>
+									{% endif %}
+								</div>
+							</div>
+							<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+								<div class="card-body">
+									<h4 class="text-center mt-4">Manage Account</h4>
+									<p class="text-center mb-4">One Account For Everything</p>
+
+									<form method="POST" action="/user">
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label for="inputFirstName" class="form-label">First Name</label>
+													<input type="text" class="form-control" id="name" name="name" placeholder="Your first name" value="{{user['firstName']}}">
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label for="lname">Middle / Last Name</label>
+													<input type="text" class="form-control" id="lname" name="lname" placeholder="Your middle and/or last name" value="{{user['lastName']}}">		
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label for="inputEmail3" class="form-label">Email</label>
+													<input type="email" placeholder="Email" value="{{user['email']}}"
+														name="email" class="form-control" id="inputEmail3">
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group">
+													<label for="mob" class="form-label">Mobile No.</label>
+													<input type="tel" placeholder="Mobile No." class="form-control"
+														maxlength="10" id="mob" name="mob" value="{{user['mob']}}" 
+														pattern="[0-9]{10}">
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="inpAbout" class="form-label">About Me</label>
+											<textarea class="form-control" rows="3" name="about"
+												id="inpAbout">{{user['about']}}</textarea>
+										</div>
+										<div class="form-group">
+											<button type="submit" class="btn btn-block btn-primary">Save
+												Changes</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
